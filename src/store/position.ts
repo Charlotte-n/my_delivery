@@ -12,7 +12,7 @@ export const usePosition = defineStore('position', {
     getters: {},
     actions: {
         //改变历史记录加上去重
-        changeHistory(value: string) {
+        changeHistory(value) {
             this.history.push(value)
             this.history = Array.from(new Set(this.history))
         },
@@ -20,7 +20,5 @@ export const usePosition = defineStore('position', {
             this.history = []
         },
     },
-    persist: {
-        enabled: true,
-    },
+    persist: true,
 })

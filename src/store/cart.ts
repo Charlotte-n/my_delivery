@@ -15,9 +15,6 @@ export const useCart = defineStore('CartStore', {
         //加入购物车，所需7个参数，商铺id，食品分类id，食品id，食品规格id，食品名字，食品价格，食品规格
         cartItems: {},
     }),
-    getters: {
-        //将数据进行整理
-    },
     actions: {
         //加入购物车
         changeCartData(food: Food | cartItemType, selectedIndex: number) {

@@ -12,7 +12,6 @@ export const useUserStore = defineStore('User', {
         servicesTitle: '' as string,
         address: {},
     }),
-    getters: {},
     actions: {
         setUserInfo(userInfo: UserInfo_Plus) {
             this.userInfo = { ...userInfo }
@@ -30,8 +29,5 @@ export const useUserStore = defineStore('User', {
         setAddress(item: SingleAddress) {
             this.address = item
         },
-    },
-    persist: {
-        enabled: true,
     },
 })
