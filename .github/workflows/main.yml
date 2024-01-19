@@ -1,0 +1,39 @@
+name: 打包上传部署到阿里云
+
+on:
+  push:
+      branches: [ main ]
+
+jobs:
+  build:
+    runs-on: centos
+    steps:
+      # 获取源代码
+        - name: 迁出代码
+      # 使用action库来获取源码
+          uses: actions/checkout@main
+
+         # 安装node
+        - name: 安装nodejs
+          uses: actions/setup-node@v1
+          with:
+              node-version: 14.0.0
+        - name: 安装依赖
+          run: npm install
+        - name: 打包
+          run: npm build
+        - name: 上传服务器
+          uses: appleboy/scp-action@v0.0.1
+          with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            password: ${{ secrets.PASSWORD }}
+            port: ${{ secrets.PORT }}
+            source: "tests/a.txt,tests/b.txt"
+            target: your_server_target_folder_path
+          
+          
+                
+
+              
+      
