@@ -31,8 +31,8 @@ jobs:
               port: ${{ secrets.PORT }}
               rm: true
               overwrite: true
-              source: "/dist"
-              target: "/www/wwwroot"
+              source: "dist"
+              target: "/www"
           
           
                 
