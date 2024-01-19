@@ -12,7 +12,7 @@ const gotoUser = () => {
 
 <template>
     <header class="top">
-        <div class="left">孟屿外卖</div>
+        <div class="left">Merikle外卖</div>
         <!--        未登录状态-->
         <div
             class="right"
