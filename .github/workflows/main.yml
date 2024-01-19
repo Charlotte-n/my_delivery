@@ -30,6 +30,7 @@ jobs:
               password: ${{ secrets.PASSWORD }}
               port: ${{ secrets.PORT }}
               rm: true
+              overwrite: true
               source: "dist"
               target: "/www/wwwroot"
           
