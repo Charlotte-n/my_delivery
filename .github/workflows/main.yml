@@ -17,7 +17,7 @@ jobs:
         - name: 安装nodejs
           uses: actions/setup-node@v1
           with:
-              node-version: 14.0.0
+              node-version: 18.0.0
         - name: 安装依赖
           run: npm install
         - name: 打包
@@ -29,9 +29,9 @@ jobs:
               username: ${{ secrets.USERNAME }}
               password: ${{ secrets.PASSWORD }}
               port: ${{ secrets.PORT }}
-              rm: true
+              overwrite: true
               source: "dist"
-              target: "/www/wwwroot"
+              target: "/www"
           
           
                 
