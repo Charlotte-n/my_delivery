@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: centos
+    runs-on: ubuntu-latest
     steps:
       # 获取源代码
         - name: 迁出代码
@@ -30,7 +30,7 @@ jobs:
             password: ${{ secrets.PASSWORD }}
             port: ${{ secrets.PORT }}
             source: "dist"
-            target: /www/wwwroot
+            target: "/www/wwwroot"
           
           
                 
