@@ -25,12 +25,12 @@ jobs:
         - name: 上传服务器
           uses: appleboy/scp-action@v0.0.1
           with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            password: ${{ secrets.PASSWORD }}
-            port: ${{ secrets.PORT }}
-            source: "dist"
-            target: "/www/wwwroot"
+              host: ${{ secrets.HOST }}
+              username: ${{ secrets.USERNAME }}
+              password: ${{ secrets.PASSWORD }}
+              port: ${{ secrets.PORT }}
+              source: "dist"
+              target: "/www/wwwroot"
           
           
                 
