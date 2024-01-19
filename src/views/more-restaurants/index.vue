@@ -10,10 +10,11 @@ import { usePosition } from '@/store/position.ts'
 import { SingleCity } from '@/apis/types/city.ts'
 import { useRoute } from 'vue-router'
 import listenBottom from '@/utils/listenBottomOut.ts'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const store = usePosition()
 const route = useRoute()
 
-const shopList = ref<SingleCity[]>([] as SingleCity[])
+const shopList = ref<SingleCity[] | any>([])
 const title = route.params.title
 //获取数据
 const childValue = ref<{
@@ -45,18 +46,22 @@ const svg = `
         " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
       `
 const getShopListApi = async () => {
-    const res = await getShopRestaurant({
-        ...params.value,
-        ...childValue.value,
-    })
-    loading.value = false
-    if (res.length === 0) {
-        isShow.value = true
-        return
+    try {
+        let res = await getShopRestaurant({
+            ...params.value,
+            ...childValue.value,
+        })
+        loading.value = false
+        if (res!.length === 0) {
+            isShow.value = true
+            return
+        }
+        params.value.offset += 20
+        //进行合并
+        shopList.value = [...shopList.value, ...res]
+    } catch (error) {
+        console.log(error)
     }
-    params.value.offset += 20
-    //进行合并
-    shopList.value = [...shopList.value, ...res]
 }
 
 const isShow = ref(false)
@@ -76,6 +81,8 @@ const getValues = (id: any, sort_id: number, supports_ids: number[]) => {
         childValue.value.support_ids = supports_ids
     }
 }
+//显示加载组件
+const load = ref(false)
 watch(
     () => (
         childValue.value.restaurant_category_ids,
@@ -83,76 +90,94 @@ watch(
         childValue.value.support_ids
     ),
     async () => {
+        load.value = true
         shopList.value = []
-        await getShopListApi()
+        const res = await getShopListApi()
+        console.log(res)
+        load.value = false
     },
     {
         deep: true,
     },
 )
-
+const watchRetrun = () => {
+    console.log('监听到了 ')
+}
 onMounted(async () => {
     await getShopListApi()
     window.addEventListener('scroll', Bottom)
+    backPhone(watchRetrun)
 })
 onUnmounted(() => {
     window.removeEventListener('scroll', Bottom)
+    cancelBack(watchRetrun)
 })
 </script>
 
 <template>
-    <header>
-        <div class="header">
-            <Header>
-                <template #first>
-                    <el-icon size="20" @click="back"><ArrowLeftBold /></el-icon>
-                </template>
-                <template #second>
-                    <div>{{ title }}</div>
-                </template>
-            </Header>
+    <div class="more_restaurants">
+        <header>
+            <div class="header">
+                <Header>
+                    <template #first>
+                        <el-icon size="20" @click="back"
+                            ><ArrowLeftBold
+                        /></el-icon>
+                    </template>
+                    <template #second>
+                        <div>{{ title }}</div>
+                    </template>
+                </Header>
+            </div>
+        </header>
+        <div class="filter-wrapper">
+            <!--    筛选-->
+            <div class="filter">
+                <Filter @getValues="getValues"></Filter>
+            </div>
         </div>
-    </header>
-    <div class="filter-wrapper">
-        <!--    筛选-->
-        <div class="filter">
-            <Filter @getValues="getValues"></Filter>
-        </div>
-    </div>
 
-    <!--    商品列表-->
-    <div
-        v-loading="loading"
-        element-loading-text="Loading..."
-        :element-loading-spinner="svg"
-        element-loading-svg-view-box="-10, -10, 50, 50"
-        element-loading-background="rgba(122, 122, 122, 0.8)"
-    >
-        <div v-for="item in shopList" :key="item.id">
-            <ShopListCommon :shopListInfo="item"></ShopListCommon>
+        <!--    商品列表-->
+        <div style="margin-top: 10vw">
+            <div
+                v-if="loading || load"
+                style="height: 80vh"
+                v-loading="loading || load"
+                element-loading-text="Loading..."
+                :element-loading-spinner="svg"
+                element-loading-svg-view-box="-10, -10, 50, 50"
+            ></div>
+            <div v-for="item in shopList" :key="item.id">
+                <ShopListCommon :shopListInfo="item"></ShopListCommon>
+            </div>
         </div>
-    </div>
 
-    <div style="height: 10vw"></div>
-    <Footer></Footer>
+        <div style="height: 10vw"></div>
+        <Footer></Footer>
+    </div>
 </template>
 
 <style scoped lang="scss">
+header {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+}
 header {
     height: 13vw;
 }
 .filter-wrapper {
     height: 13vw;
 }
-.header {
-    position: fixed;
-    width: 100%;
-    z-index: 999;
-}
+//.header {
+//    position: fixed;
+//    width: 100%;
+//    z-index: 999;
+//}
 .filter {
     position: fixed;
     width: 100%;
-    top: 10vw;
+    top: 20vw;
     z-index: 9999;
 }
 </style>

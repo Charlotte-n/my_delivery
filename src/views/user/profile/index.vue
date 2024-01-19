@@ -10,10 +10,13 @@ import { useUserStore } from '@/store/user.ts'
 import { UserInfo } from '@/apis/types/user.ts'
 import { formate_img } from '@/utils/formate_img.ts'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { usePosition } from '@/store/position.ts'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const userStore: any = useUserStore()
 const userInfo: UserInfo = userStore.userInfo.detail_userinfo
 const router = useRouter()
+const positionStore = usePosition()
 const back = () => {
     history.go(-1)
 }
@@ -27,9 +30,26 @@ const EditAddress = () => {
 }
 //手机
 const dialogVisible = ref(false)
+//退出登录
+const logout = () => {
+    const geohash = positionStore.geohash
+    //清空store里的用户信息
+    userStore.LogOut()
+    //返回首页
+    router.push({ path: `/takeaway/${geohash}` })
+}
 const showApp = () => {
     dialogVisible.value = true
 }
+const watchReturn = () => {
+    console.log('监听到了')
+}
+onMounted(() => {
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
+})
 </script>
 
 <template>
@@ -108,7 +128,7 @@ const showApp = () => {
             </ul>
         </div>
         <div class="logout">
-            <button>退出登录</button>
+            <button @click="logout">退出登录</button>
         </div>
     </main>
     <el-dialog v-model="dialogVisible" width="80%">

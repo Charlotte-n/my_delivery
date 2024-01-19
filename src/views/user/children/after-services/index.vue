@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import Header from '@/components/common-header-2/index.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { getServices } from '@/apis/user.ts'
 import { useUserStore } from '@/store/user.ts'
 import { useRouter } from 'vue-router'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const userStore: any = useUserStore()
 const router = useRouter()
 const back = () => {
@@ -41,8 +42,15 @@ const gotoDetail = (title: string, content: string) => {
     router.push({ path: '/user/after_services/detail' })
 }
 
+const watchReturn = () => {
+    console.log('监听到了')
+}
 onMounted(() => {
+    backPhone(watchReturn)
     getServicesApi()
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
 })
 </script>
 

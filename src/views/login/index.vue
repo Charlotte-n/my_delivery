@@ -81,70 +81,81 @@ onMounted(() => {
 </script>
 
 <template>
-    <Header>
-        <template #first>
-            <el-icon size="20" @click="back"
-                ><ArrowLeftBold></ArrowLeftBold
-            ></el-icon>
-        </template>
-        <template #second> 密码登录 </template>
-    </Header>
-    <form class="form">
-        <div class="form-item">
-            <input type="text" placeholder="账号" v-model="form.username" />
-        </div>
-        <div class="username_warning" v-if="username_warning_show">
-            请输入账号
-        </div>
-        <div class="password form-item">
-            <input
-                type="password"
-                placeholder="密码"
-                ref="handlePassword"
-                v-model="form.password"
-            />
-            <el-switch
-                v-model="showPassword"
-                class="ml-2"
-                size="large"
-                inline-prompt
-                style="
-                    --el-switch-on-color: #ff692f;
-                    --el-switch-off-color: #ccc;
-                "
-                active-text="隐藏密码"
-                inactive-text="显示密码"
-                @change="handleChange"
-            />
-        </div>
-        <div class="password_warning" v-if="password_warning_show">
-            请输入密码
-        </div>
-        <div class="verify_code">
-            <input
-                type="text"
-                placeholder="验证码"
-                v-model="form.captcha_code"
-                maxlength="4"
-            />
-            <div class="code">
-                <div class="code_img">
-                    <img :src="codeInfo.code" alt="" />
-                </div>
-                <div class="change_code">
-                    <span>看不清</span>
-                    <span @click="getCodeApi">换一张</span>
+    <div class="login_container">
+        <header>
+            <Header>
+                <template #first>
+                    <el-icon size="20" @click="back"
+                        ><ArrowLeftBold></ArrowLeftBold
+                    ></el-icon>
+                </template>
+                <template #second> 密码登录 </template>
+            </Header>
+        </header>
+        <form class="form">
+            <div class="form-item">
+                <input type="text" placeholder="账号" v-model="form.username" />
+            </div>
+            <div class="username_warning" v-if="username_warning_show">
+                请输入账号
+            </div>
+            <div class="password form-item">
+                <input
+                    type="password"
+                    placeholder="密码"
+                    ref="handlePassword"
+                    v-model="form.password"
+                />
+                <el-switch
+                    v-model="showPassword"
+                    class="ml-2"
+                    size="large"
+                    inline-prompt
+                    style="
+                        --el-switch-on-color: #ff692f;
+                        --el-switch-off-color: #ccc;
+                    "
+                    active-text="隐藏密码"
+                    inactive-text="显示密码"
+                    @change="handleChange"
+                />
+            </div>
+            <div class="password_warning" v-if="password_warning_show">
+                请输入密码
+            </div>
+            <div class="verify_code">
+                <input
+                    type="text"
+                    placeholder="验证码"
+                    v-model="form.captcha_code"
+                    maxlength="4"
+                />
+                <div class="code">
+                    <div class="code_img">
+                        <img :src="codeInfo.code" alt="" />
+                    </div>
+                    <div class="change_code">
+                        <span>看不清</span>
+                        <span @click="getCodeApi">换一张</span>
+                    </div>
                 </div>
             </div>
+            <div class="code_warning" v-if="code_warning_show">
+                请输入验证码
+            </div>
+        </form>
+        <div class="login">
+            <el-button @click="handleLogin">登录</el-button>
         </div>
-        <div class="code_warning" v-if="code_warning_show">请输入验证码</div>
-    </form>
-    <div class="login">
-        <el-button @click="handleLogin">登录</el-button>
     </div>
 </template>
 
 <style scoped lang="scss">
+header {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+}
 .form {
     background-color: white;
     margin-top: 3vw;
@@ -155,6 +166,7 @@ onMounted(() => {
         padding: 0 1vw 0 0;
         display: flex;
         align-items: center;
+        justify-content: space-between;
     }
     .verify_code {
         display: flex;
@@ -191,7 +203,6 @@ onMounted(() => {
     }
 }
 input {
-    width: 100%;
     border: 0;
     padding: 0 3vw;
     height: 10vw;

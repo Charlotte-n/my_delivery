@@ -3,9 +3,9 @@ import { onMounted, ref } from 'vue'
 import { getCity } from '@/apis/city.ts'
 import { hotCity } from '@/apis/types/city.ts'
 
-const hotCity = ref<hotCity>([])
+const hotCity = ref<hotCity>([] as hotCity)
 const getCityApi = async () => {
-    const res = await getCity('hot')
+    const res: any = await getCity('hot')
     hotCity.value = res
 }
 onMounted(() => {

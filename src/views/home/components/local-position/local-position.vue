@@ -2,12 +2,11 @@
 import { ArrowRightBold } from '@element-plus/icons-vue'
 import { getCity } from '@/apis/city.ts'
 import { onMounted, ref } from 'vue'
-import { SingleCity } from '@/apis/types/city.ts'
 
 const cityname = ref()
 const id = ref<number>()
 const getCityApi = async () => {
-    const res: SingleCity = await getCity('guess')
+    const res: any = await getCity('guess')
     cityname.value = res?.name
     id.value = res?.id
 }

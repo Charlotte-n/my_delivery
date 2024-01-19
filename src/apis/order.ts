@@ -13,7 +13,7 @@ enum OrderUrl {
  * 获取订单列表
  * @param params
  */
-export const getOrderList = (params: { limit: string; offset: string }) => {
+export const getOrderList = (params: { limit: number; offset: number }) => {
     return services
         .get<ResponseType<OrderList>>({
             url: OrderUrl.ORDERLIST,

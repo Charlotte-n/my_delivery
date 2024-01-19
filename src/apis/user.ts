@@ -79,24 +79,24 @@ export const getAddressList = (user_id: string | number) => {
         .then((res) => res.data)
 }
 
-interface addAddressParamType {
-    user_id: string | number
-    address: string
-    address_detail: string
-    geohash: string
-    name: string
-    phone: number
-    tag: string
-    sex: number
-    phone_bk: string
-    tag_type: number
-}
+// interface addAddressParamType {
+//     user_id: string | number
+//     address: string
+//     address_detail: string
+//     geohash: string
+//     name: string
+//     phone: number
+//     tag: string
+//     sex: number
+//     phone_bk: string
+//     tag_type: number
+// }
 
 /**
  * 增加收货地址
  * @param addAddressParam
  */
-export const addAddressApi = (addAddressParam: addAddressParamType) => {
+export const addAddressApi = (addAddressParam: any) => {
     return services
         .post<ResponseType<addAddressType>>({
             url: `/v1/users/${addAddressParam.user_id}/addresses`,
@@ -163,10 +163,11 @@ export interface tradePackageParamType {
  * @param user_id
  * @param Param
  */
-export const tradeRedPackage = (
-    user_id: string | number,
-    Param: tradePackageParamType,
-) => {
+interface ParamType {
+    captcha_code: string
+    exchange_code: string
+}
+export const tradeRedPackage = (user_id: string | number, Param: ParamType) => {
     return services
         .post<ResponseType<any>>({
             url: `/v1/users/${user_id}/hongbao/exchange`,

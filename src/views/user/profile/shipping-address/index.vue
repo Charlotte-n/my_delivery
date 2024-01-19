@@ -3,9 +3,10 @@ import Header from '@/components/common-header-3/index.vue'
 import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/user.ts'
 import { deleteAddress, getAddressList } from '@/apis/user.ts'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { AddressListType } from '@/apis/types/user.ts'
 import { useRouter } from 'vue-router'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const router = useRouter()
 const userStore: any = useUserStore()
 const back = () => {
@@ -31,8 +32,16 @@ const getAddressListApi = async () => {
 const gotoAddAddress = () => {
     router.push({ path: '/user/add-address' })
 }
+
+const watchReturn = () => {
+    console.log('监听到了')
+}
 onMounted(() => {
     getAddressListApi()
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
 })
 </script>
 

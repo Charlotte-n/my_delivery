@@ -11,7 +11,7 @@ const getBannerApi = async () => {
     BannerData.value = result
 }
 //将数据进行分组
-const groupBy = (arr: [], num: number) => {
+const groupBy = (arr: foods, num: number) => {
     const result = []
     const group = Math.floor(arr.length / num)
     for (let i = 0; i < group; i++) {
@@ -20,8 +20,10 @@ const groupBy = (arr: [], num: number) => {
     return result
 }
 const gotoDetail = (id: string, title: string) => {
-    id = decode(id)
-    router.push({ name: 'detail_food', params: { id, title } })
+    console.log(id)
+    const string_id = decode(id)
+    console.log(string_id)
+    router.push({ name: 'detail_food', params: { id: string_id | 392, title } })
 }
 const decode = (url: string) => {
     let urlData = decodeURIComponent(

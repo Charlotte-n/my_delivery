@@ -2,36 +2,42 @@
 import Header from '@/components/common-header-2/index.vue'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
 import { getOrderRemark } from '@/apis/order.ts'
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import useOrderStore from '@/store/order.ts'
 const OrderStore = useOrderStore()
 const back = () => {
     history.go(-1)
 }
 //获取备注信息
-const orderRemark = ref([])
+const orderRemark = ref<any>([])
 const getOrderRemarkApi = async () => {
     orderRemark.value = await getOrderRemark(2)
 }
-const group = ref([])
+const group = ref<any>([])
 
-const saveInstance = ($event, index: number) => {
-    if (!group.value.includes($event.target.innerText)) {
-        group.value.push($event.target.innerText)
+const saveInstance = (e: any) => {
+    if (!group.value.includes(e.target.innerText)) {
+        group.value.push(e.target.innerText)
     }
 }
 //选中状态
-const changeActive = (e) => {
+const changeActive = (e: any) => {
     e.target.className = 'active'
 }
 //确定
 const confirm = () => {
+    if (otherRemark.value !== '') {
+        group.value.push(otherRemark.value)
+    }
     OrderStore.setOrderRemark(group.value)
     history.go(-1)
 }
-const otherRemark = ref()
-onMounted(() => {
-    getOrderRemarkApi()
+const otherRemark = ref('')
+const loading_v = ref(false)
+onMounted(async () => {
+    loading_v.value = true
+    await getOrderRemarkApi()
+    loading_v.value = false
 })
 </script>
 
@@ -47,13 +53,14 @@ onMounted(() => {
         </Header>
     </header>
     <main>
+        <div style="height: 80vh" v-loading="loading_v" v-if="loading_v"></div>
         <div class="quick_remark">
             <h3 class="title">快速备注</h3>
             <div class="remark">
                 <ul
-                    v-for="(item, index) in orderRemark?.remarks"
+                    v-for="item in orderRemark?.remarks"
                     :key="item"
-                    @click="saveInstance($event, index)"
+                    @click="saveInstance($event)"
                 >
                     <li
                         v-for="singleItem in item"

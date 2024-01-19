@@ -78,14 +78,16 @@ onMounted(() => {
 </script>
 
 <template>
-    <Header>
-        <template #first>
-            <el-icon size="20" @click="back"
-                ><ArrowLeftBold></ArrowLeftBold
-            ></el-icon>
-        </template>
-        <template #second> 密码登录 </template>
-    </Header>
+    <header>
+        <Header>
+            <template #first>
+                <el-icon size="20" @click="back"
+                    ><ArrowLeftBold></ArrowLeftBold
+                ></el-icon>
+            </template>
+            <template #second> 密码登录 </template>
+        </Header>
+    </header>
     <form class="form">
         <div class="form-item">
             <input type="text" placeholder="账号" v-model="form.username" />
@@ -142,6 +144,13 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+}
 .form {
     background-color: white;
     margin-top: 3vw;
@@ -152,6 +161,7 @@ onMounted(() => {
         padding: 0 1vw 0 0;
         display: flex;
         align-items: center;
+        justify-content: space-between;
     }
     .verify_code {
         display: flex;
@@ -188,7 +198,6 @@ onMounted(() => {
     }
 }
 input {
-    width: 100%;
     border: 0;
     padding: 0 3vw;
     height: 10vw;

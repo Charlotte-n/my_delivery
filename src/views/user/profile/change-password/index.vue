@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import Header from '@/components/common-header-2/index.vue'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { getCode } from '@/apis/user.ts'
 import { Code } from '@/apis/types/user.ts'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const back = () => {
     history.go(-1)
 }
@@ -21,8 +22,15 @@ const form = reactive({
     confirm_password: '',
     verify_code: '',
 })
+const watchReturn = () => {
+    console.log('监听到了')
+}
 onMounted(() => {
     getCodeApi()
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
 })
 </script>
 
@@ -52,7 +60,7 @@ onMounted(() => {
                     type="password"
                     placeholder="旧密码"
                     ref="handlePassword"
-                    v-model="form.oldpassword"
+                    v-model="form.old_password"
                 />
             </div>
             <!--            <div class="password_warning" v-if="password_warning_show">-->
@@ -84,7 +92,7 @@ onMounted(() => {
                 <input
                     type="text"
                     placeholder="验证码"
-                    v-model="form.varify_code"
+                    v-model="form.verify_code"
                     maxlength="4"
                 />
                 <div class="code">

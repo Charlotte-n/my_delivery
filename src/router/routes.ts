@@ -103,10 +103,13 @@ export const routes: Array<RouteRecordRaw> = [
                 '@/views/user/children/my-discount/children/children/trade-package.vue'
             ),
     },
+
     {
         path: '/user/my_discount/shangjia',
         component: () =>
-            import('@/views/user/children/my-discount/children/shangjia.vue'),
+            import(
+                '@/views/user/children/my-discount/children/children/recommend-reword.vue'
+            ),
     },
     //我的积分
     {
@@ -175,5 +178,10 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/order/pay/ticket',
         component: () => import('@/views/pay/children/order-ticket.vue'),
+    },
+    //支付主页面
+    {
+        path: '/order/pay/main-pay',
+        component: () => import('@/views/pay/children/main-pay.vue'),
     },
 ]

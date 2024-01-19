@@ -676,6 +676,7 @@ onMounted(() => {
     padding: 4vw 0;
     display: flex;
     background-color: white;
+    font-size: 4vw;
     li {
         border-right: 1px solid rgba(115, 115, 115, 0.3);
         flex: 1;
@@ -709,7 +710,7 @@ onMounted(() => {
 .pops {
     position: fixed;
     left: 0;
-    top: 18.6vw;
+    top: 28.6vw;
     margin-top: 3vw;
     background-color: white;
     z-index: 9999;

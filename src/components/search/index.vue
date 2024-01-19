@@ -4,7 +4,7 @@ const props = defineProps<{
     searchTitle: string
 }>()
 const emit = defineEmits<{
-    getInputValue: (value: string) => void
+    getInputValue: any
 }>()
 const content = ref()
 const handleSubmit = () => {

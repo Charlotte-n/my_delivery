@@ -60,6 +60,20 @@ onMounted(() => {
         </ul>
         <div class="history">查看历史红包 ></div>
     </main>
+    <footer>
+        <div
+            class="trade"
+            @click="router.push('/user/my_discount/trade_package')"
+        >
+            兑换红包
+        </div>
+        <div
+            class="recommend"
+            @click="router.push({ path: '/user/my_discount/shangjia' })"
+        >
+            推荐有奖
+        </div>
+    </footer>
 </template>
 
 <style scoped lang="scss">
@@ -155,6 +169,24 @@ main {
         &:last-child {
             color: $themeColor;
         }
+    }
+}
+footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    text-align: center;
+    background-color: white;
+    box-shadow: 1vw 1vw 1vw 1vw rgba(115, 115, 115, 0.3);
+    .trade {
+        padding: 4vw;
+        border-right: 1px solid rgba(115, 115, 115, 0.2);
+        flex: 1;
+    }
+    .recommend {
+        padding: 4vw;
+        flex: 1;
     }
 }
 </style>

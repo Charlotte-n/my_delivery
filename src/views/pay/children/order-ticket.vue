@@ -6,6 +6,9 @@ const isActive = ref(false)
 const confirm = () => {
     history.go(-1)
 }
+const back = () => {
+    history.go(-1)
+}
 </script>
 
 <template>
@@ -23,7 +26,7 @@ const confirm = () => {
         <ul>
             <li>
                 <span>不需要开发票</span>
-                <span @click="changeActive"
+                <span
                     ><el-icon
                         size="25"
                         :class="{ active: isActive }"

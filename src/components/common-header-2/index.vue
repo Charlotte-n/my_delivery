@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-    <header>
+    <header ref="header">
         <div class="first">
             <slot name="first"></slot>
         </div>
@@ -16,7 +16,7 @@ header {
     position: sticky;
     left: 0;
     top: 0;
-    padding: 3vw 2vw;
+    padding: 10vw 2vw 3vw 2vw;
     display: flex;
     background-color: $themeColor;
     color: white;

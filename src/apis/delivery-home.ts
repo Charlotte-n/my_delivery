@@ -11,7 +11,6 @@ import {
     Shop,
     ShopDetailInfo,
 } from '@/apis/types/dekivery-home.ts'
-import { UnwrapRef } from 'vue'
 import { RouteParamValue } from 'vue-router'
 enum DeliveryHome {
     FOOD_CATEGORY = '/v2/index_entry',
@@ -40,19 +39,18 @@ export const getFoodCategory = () => {
  * 获取商铺列表
  * @param position
  */
-export const getShopRestaurant = (
-    position: UnwrapRef<{
-        offset: number
-        latitude: string
-        limit: number
-        restaurant_category_id: string | RouteParamValue[]
-        longitude: string
-        order_by?: number
-        delivery_mode?: number[] | string[]
-        support_ids?: (string | number)[]
-        restaurant_category_ids?: (string | number)[] | number
-    }>,
-) => {
+interface paramType {
+    offset: number
+    latitude: string
+    limit: number
+    restaurant_category_id?: string | RouteParamValue[]
+    longitude: string
+    order_by?: number
+    delivery_mode?: number[] | string[]
+    support_ids?: (string | number)[]
+    restaurant_category_ids?: (string | number)[] | number
+}
+export const getShopRestaurant = (position: paramType) => {
     return services
         .get<ResponseType<Shop>>({
             url: DeliveryHome.SHOPPING_RESTAURANT,

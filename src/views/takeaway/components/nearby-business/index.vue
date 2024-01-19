@@ -6,12 +6,14 @@ import { onMounted, onUnmounted } from 'vue'
 import { SingleCity } from '@/apis/types/city.ts'
 import { Shop } from '@/apis/types/dekivery-home.ts'
 import listenBottom from '@/utils/listenBottomOut.ts'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useMixStore } from '@/store/mix.ts'
 
+const MixStore = useMixStore()
 const props = defineProps<{
     PosiInfo: SingleCity
 }>()
-
+const getMore = computed(() => MixStore.getMore)
 const isShow = ref(false)
 const ShoppingRestaurantInfo = ref<Shop>([] as Shop)
 const params = ref({
@@ -36,12 +38,16 @@ const getShoppingRestaurantApi = async () => {
 // 可视区域/屏幕高度（document.documentElement.clientHeight）
 // 页面高度（document.documentElement.scrollHeight）
 const Bottom = listenBottom(isShow, getShoppingRestaurantApi)
+const business = ref()
 onMounted(() => {
     getShoppingRestaurantApi()
     window.addEventListener('scroll', Bottom)
 })
 onUnmounted(() => {
     window.removeEventListener('scroll', Bottom, false)
+})
+defineExpose({
+    getShoppingRestaurantApi,
 })
 </script>
 
@@ -51,10 +57,11 @@ onUnmounted(() => {
             <el-icon size="4vw"><House /></el-icon>
             <span>附近商家</span>
         </div>
-        <div class="businesses">
+        <div class="businesses" ref="business">
             <div v-for="item in ShoppingRestaurantInfo" :key="item.id">
                 <ShopList :shopListInfo="item"></ShopList>
             </div>
+            <p v-loading="getMore" v-if="getMore">下拉加载更多</p>
         </div>
     </div>
 </template>

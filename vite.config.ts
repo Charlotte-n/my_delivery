@@ -27,6 +27,7 @@ const my_pxtovw = pxtovw({
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    base: './',
     plugins: [
         vue(),
         AutoImport({
@@ -51,5 +52,14 @@ export default defineConfig({
             },
         },
     },
-
+    //生产环境移除log和debugger
+    build: {
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: true,
+                drop_debugger: true,
+            },
+        },
+    },
 })

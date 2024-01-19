@@ -50,12 +50,12 @@ const downloadApp = () => {
     </Header>
     <div class="user" @click="gotoProfileDetail">
         <div class="image">
-            <img :src="formate_img(userInfo.avatar)" alt="" />
+            <img :src="formate_img(userInfo?.avatar)" alt="" />
         </div>
         <div class="userinfo">
-            <span>{{ userInfo.username }}</span>
+            <span>{{ userInfo?.username }}</span>
             <span>{{
-                userInfo.is_mobile_valid ? '绑定了手机号' : '暂无绑定的手机号'
+                userInfo?.is_mobile_valid ? '绑定了手机号' : '暂无绑定的手机号'
             }}</span>
         </div>
         <span class="right">
@@ -66,20 +66,20 @@ const downloadApp = () => {
         <ul>
             <li class="money" @click="router.push('/user/my_balance')">
                 <div class="money_number">
-                    {{ userInfo.balance.toFixed(2) }} <span> 元 </span>
+                    {{ userInfo?.balance.toFixed(2) }} <span> 元 </span>
                 </div>
                 <div>我的余额</div>
             </li>
             <li class="discount_card" @click="router.push('/user/my_discount')">
                 <div class="card_num">
-                    {{ userInfo.gift_amount }}
+                    {{ userInfo?.gift_amount }}
                     <span>个</span>
                 </div>
                 <div>我的优惠</div>
             </li>
             <li class="integral" @click="router.push('/user/my_integration')">
                 <div class="integral_num">
-                    {{ userInfo.is_active }} <span>分</span>
+                    {{ userInfo?.is_active }} <span>分</span>
                 </div>
                 <div>我的积分</div>
             </li>

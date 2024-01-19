@@ -3,7 +3,8 @@ import Header from '@/components/common-header-2/index.vue'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/user.ts'
 import showdown from 'showdown'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const userStore = useUserStore()
 const back = () => {
     history.go(-1)
@@ -13,8 +14,15 @@ const markdownText = () => {
     const html = converter.makeHtml(userStore.servicesDetail)
     return html
 }
+
+const watchReturn = () => {
+    console.log('监听到了')
+}
 onMounted(() => {
-    console.log(markdownText())
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
 })
 </script>
 

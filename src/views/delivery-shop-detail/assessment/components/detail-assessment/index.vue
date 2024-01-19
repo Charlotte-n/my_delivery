@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { RateCateType, RateInfoType } from '@/apis/types/dekivery-home.ts'
+import { RateCateType, RateInfo } from '@/apis/types/dekivery-home.ts'
 import { inject, onMounted, onUnmounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import { formate_img_2 } from '@/utils/formate_img.ts'
-const route = useRoute()
 const props = defineProps<{
     AccessCate: RateCateType
     handleAssess: (name: string) => void
 }>()
-const AssessInfo: RateInfoType = inject('AssessInfo')
+const AssessInfo: RateInfo[] | undefined = inject('AssessInfo')
 //处理评价切换
 const active_name = ref('全部')
 const handleChange = (name: string) => {

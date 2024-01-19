@@ -21,8 +21,8 @@ const gotoUser = () => {
                 store.userInfo.user_id == undefined
             "
         >
-            <a href="/login">登录</a>
-            <a href="/register">注册</a>
+            <span @click="router.push('/login')">登录</span>
+            <span @click="router.push('/login')">注册</span>
         </div>
         <!--        登录状态-->
         <div v-else>
@@ -33,14 +33,15 @@ const gotoUser = () => {
 
 <style scoped lang="scss">
 .top {
-    padding: 3vw 2vw;
+    padding: 10vw 2vw 3vw 2vw;
     display: flex;
     justify-content: space-between;
     background-color: $themeColor;
     color: white;
     font-size: 5vw;
 }
-a {
+span {
+    display: inline-block;
     padding: 0 10px;
     &:first-child {
         border-right: 1px solid white;

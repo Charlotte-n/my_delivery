@@ -30,4 +30,5 @@ export const useUserStore = defineStore('User', {
             this.address = item
         },
     },
+    persist: true,
 })

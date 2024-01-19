@@ -7,7 +7,7 @@ import {
     SuccessFilled,
 } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
-import { computed, onMounted, Ref, ref, UnwrapRef } from 'vue'
+import { computed, onMounted, onUnmounted, Ref, ref, UnwrapRef } from 'vue'
 import { SingleAddress } from '@/apis/types/user.ts'
 import { getAddressList } from '@/apis/user.ts'
 import { useUserStore } from '@/store/user.ts'
@@ -18,6 +18,7 @@ import { formate_img } from '@/utils/formate_img.ts'
 import { getShopDetailInfo } from '@/apis/delivery-home.ts'
 import { SingleRestaurant } from '@/apis/types/search.ts'
 import useOrderStore from '@/store/order.ts'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const router = useRouter()
 const route = useRoute()
 const userStore: any = useUserStore()
@@ -62,9 +63,18 @@ const changeActive = () => {
 const changePayMethod = () => {
     active.value = !active.value
 }
-
-onMounted(() => {
-    getAddressApi()
+const loading = ref(false)
+const watchReturn = () => {
+    console.log('监听到了')
+}
+onMounted(async () => {
+    loading.value = true
+    await getAddressApi()
+    loading.value = false
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
 })
 </script>
 
@@ -80,11 +90,14 @@ onMounted(() => {
                 <span class="text1-ellipsis text"> 确认订单 </span>
             </div>
             <div class="right">
-                <el-icon size="20"><User></User></el-icon>
+                <el-icon size="25" @click="router.push('/user')"
+                    ><User></User
+                ></el-icon>
             </div>
         </div>
     </header>
     <main>
+        <div style="height: 100vh" v-loading="loading" v-if="loading"></div>
         <div
             class="address"
             @click="router.push({ path: '/order/pay/address' })"
@@ -195,7 +208,12 @@ onMounted(() => {
     </main>
     <footer>
         <div class="left">待支付 ￥1349</div>
-        <div class="right">确定下单</div>
+        <div
+            class="right"
+            @click="router.push({ path: '/order/pay/main-pay' })"
+        >
+            确定下单
+        </div>
     </footer>
     <div class="pay_method_mask" v-if="active">
         <div class="title">支付方式</div>
@@ -222,8 +240,15 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+}
 .header {
-    padding: 3vw 2vw;
+    padding: 10vw 2vw 3vw 2vw;
     display: flex;
     justify-content: space-between;
     align-items: center;

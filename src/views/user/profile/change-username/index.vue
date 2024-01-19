@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import Header from '@/components/common-header-2/index.vue'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
-import { reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { FormInstance, FormRules } from 'element-plus'
 import { useUserStore } from '@/store/user.ts'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const userStore: any = useUserStore()
 const back = () => {
     history.go(-1)
@@ -26,6 +27,15 @@ const handleChange = async (form: FormInstance) => {
         }
     })
 }
+const watchReturn = () => {
+    console.log('监听到了')
+}
+onMounted(() => {
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
+})
 </script>
 
 <template>

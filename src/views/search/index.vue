@@ -15,7 +15,7 @@ import { SearchRestaurant } from '@/apis/types/search.ts'
 const router = useRouter()
 const store: any = usePosition()
 const gotoHome = () => {
-    router.push({ path: '/takeaway/36.665291,116.994926' })
+    router.push({ path: '/takeaway/36.565373,116.813575' })
 }
 //历史记录
 const getInputValue = (value: string) => {
@@ -54,18 +54,21 @@ const resethistory = () => {
 </script>
 
 <template>
-    <Header>
-        <template #first>
-            <el-icon size="20" @click="gotoHome"><ArrowLeftBold /></el-icon>
-        </template>
-        <template #second> 搜索 </template>
-    </Header>
+    <header class="header-1">
+        <Header>
+            <template #first>
+                <el-icon size="25" @click="gotoHome"><ArrowLeftBold /></el-icon>
+            </template>
+            <template #second> 搜索 </template>
+        </Header>
+    </header>
+
     <Search
         searchTitle="请输入商家或美食名称"
         @getInputValue="getInputValue"
     ></Search>
     <div class="history" v-if="!isShowShangjia">
-        <header>搜索历史</header>
+        <header class="search_history">搜索历史</header>
         <section v-if="store.history.length !== 0">
             <div
                 class="history_name"
@@ -96,6 +99,13 @@ const resethistory = () => {
 </template>
 
 <style scoped lang="scss">
+.header-1 {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+}
 .history {
     margin-top: 3vw;
     color: #666666;
@@ -106,18 +116,21 @@ const resethistory = () => {
             margin-top: 0;
         }
     }
-    header {
+    .search_history {
         font-weight: 600;
         padding-left: 3vw;
     }
     section {
         margin-top: 3vw;
-        padding: 5vw 3vw 2vw 5vw;
         background-color: white;
         .history_name {
+            font-size: 4vw;
+            padding: 6vw 5vw;
+            border-bottom: 1px solid rgba(115, 115, 115, 0.1);
             color: black;
         }
         .clearall {
+            padding: 3vw 0;
             text-align: center;
         }
     }

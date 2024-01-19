@@ -5,7 +5,7 @@ import { getCode, tradeRedPackage } from '@/apis/user.ts'
 import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/store/user.ts'
 
-const userStore = useUserStore()
+const userStore: any = useUserStore()
 const back = () => {
     history.go(-1)
 }

@@ -7,16 +7,11 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AddCart: typeof import('./src/components/add-cart/index.vue')['default']
-    BuyFoodList: typeof import('./src/components/buyfoodlist/buy-food-list.vue')['default']
-    CommonHeader: typeof import('./src/components/common-header/index.vue')['default']
     CommonHeader2: typeof import('./src/components/common-header-2/index.vue')['default']
     CommonHeader3: typeof import('./src/components/common-header-3/index.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCarousel: typeof import('element-plus/es')['ElCarousel']
     ElCarouselItem: typeof import('element-plus/es')['ElCarouselItem']
-    ElCollapse: typeof import('element-plus/es')['ElCollapse']
-    ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']
@@ -25,10 +20,8 @@ declare module 'vue' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
-    ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTag: typeof import('element-plus/es')['ElTag']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Search: typeof import('./src/components/search/index.vue')['default']

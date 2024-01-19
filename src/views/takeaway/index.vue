@@ -5,18 +5,25 @@ import NearbyBusiness from './components/nearby-business/index.vue'
 import { Search } from '@element-plus/icons-vue'
 import { getdetailPosi } from '@/apis/city.ts'
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick, computed, onUnmounted } from 'vue'
 import { usePosition } from '@/store/position.ts'
 import { useUserStore } from '@/store/user.ts'
 import { User } from '@element-plus/icons-vue'
+import { PullDownMix } from '@/utils/pullDown.ts'
+import { useMixStore } from '@/store/mix.ts'
 
 const router = useRouter()
 const route = useRoute()
 const store = usePosition()
 const userStore: any = useUserStore()
+const MixStore = useMixStore()
+const refresh = computed(() => MixStore.pullUpRefresh)
+//进行上拉刷新
+const main = ref()
+const nearby = ref()
 
 //#region 获取定位详情信息
-const detailPosiInfo = ref<string>()
+const detailPosiInfo = ref<string>('')
 const PosiInfo = ref<any>({} as any)
 const getDetailPosiApi = async () => {
     const geohash = String(route.params.geohash)
@@ -29,6 +36,7 @@ const getDetailPosiApi = async () => {
     })
 }
 //endregion
+
 //跳到search页面
 const gotoSearch = () => {
     router.push({ path: '/search' })
@@ -37,14 +45,30 @@ const gotoSearch = () => {
 const gotoUser = () => {
     router.push({ path: '/user' })
 }
-onMounted(() => {
-    console.log(userStore.userInfo.user_id)
+//请求数据
+const pullingDownHandler = () => {
+    // 模拟请求
     getDetailPosiApi()
+}
+const loading = ref(false)
+onMounted(async () => {
+    loading.value = true
+    await getDetailPosiApi()
+    loading.value = false
+    await nextTick(() => {
+        PullDownMix(
+            main.value,
+            pullingDownHandler,
+            nearby.value.getShoppingRestaurantApi,
+        )
+    })
 })
+//取消这个下拉和上滑
+onUnmounted(() => {})
 </script>
 
 <template>
-    <div class="header-v1">
+    <header class="header-v1">
         <Header :cityName="detailPosiInfo">
             <template v-slot:left>
                 <el-icon @click="gotoSearch" size="25">
@@ -66,29 +90,42 @@ onMounted(() => {
                 </div>
             </template>
         </Header>
-    </div>
-    <main>
-        <div class="banner">
-            <FoodCategory></FoodCategory>
+    </header>
+    <main ref="main" v-loading="loading || refresh">
+        <div>
+            <div v-loading="refresh" v-if="refresh" style="height: 20px">
+                下拉刷新
+            </div>
+            <div class="banner">
+                <FoodCategory></FoodCategory>
+            </div>
+            <div class="home_nearby-business">
+                <NearbyBusiness
+                    :PosiInfo="PosiInfo"
+                    ref="nearby"
+                ></NearbyBusiness>
+            </div>
+            <div class="zhan"></div>
         </div>
-
-        <div class="home_nearby-business">
-            <NearbyBusiness :PosiInfo="PosiInfo"></NearbyBusiness>
-        </div>
-        <div class="zhan"></div>
     </main>
 </template>
 
 <style scoped lang="scss">
 .header {
-    position: fixed;
-    width: 98%;
+    position: sticky;
     top: 0;
     left: 0;
     z-index: 999;
 }
 .header-v1 {
-    height: 13vw;
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    height: 23vw;
+}
+main {
+    height: 80vh;
 }
 .login {
     padding: 0 2vw;

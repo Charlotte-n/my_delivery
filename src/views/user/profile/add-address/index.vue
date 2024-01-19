@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import Header from '@/components/common-header-2/index.vue'
 import { ArrowLeftBold } from '@element-plus/icons-vue'
-import { reactive, ref, toRaw } from 'vue'
-import { FormInstance, FormRules } from 'element-plus'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import { FormInstance } from 'element-plus'
 import { addAddressApi } from '@/apis/user.ts'
 import { usePosition } from '@/store/position.ts'
 import { useUserStore } from '@/store/user.ts'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const posiStore = usePosition()
-const userStore = useUserStore()
+const userStore: any = useUserStore()
 
 const back = () => {
     history.go(-1)
@@ -24,11 +25,10 @@ const extra = reactive({
     user_id: userStore.userInfo.user_id,
     tag: '家',
     sex: 2,
-    tag: 2,
 })
 const formRef = ref()
 //检验是否为手机号的格式
-const checkPhone = (rule: any, value: any, callback: any) => {
+const checkPhone = (value: any, callback: any) => {
     const reg = /^1[3456789]\d{9}$/
     if (!reg.test(value)) {
         callback(new Error('请输入正确的手机格式'))
@@ -37,7 +37,7 @@ const checkPhone = (rule: any, value: any, callback: any) => {
     }
 }
 
-const rules = reactive<FormRules<formRef>>({
+const rules = reactive({
     name: [{ required: true, message: '请输入收货人姓名', trigger: 'blur' }],
     address: [{ required: true, message: '请输入地址', trigger: 'blur' }],
     address_detail: [
@@ -62,15 +62,22 @@ const addAddress = (formEl: FormInstance | undefined) => {
             const res = await addAddressApi(Object.assign(extra, formValue))
             if (res.status === 0) {
                 dialogVisible.value = true
-                errorInfo.value = res.message
             }
-            console.log(res)
         } else {
             console.log('error submit!')
             return false
         }
     })
 }
+const watchReturn = () => {
+    console.log('监听到了')
+}
+onMounted(() => {
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
+})
 </script>
 
 <template>

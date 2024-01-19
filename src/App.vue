@@ -7,7 +7,7 @@ const whitelist = ['orderlist', 'search', 'takeaway', 'user']
 
 <template>
     <router-view></router-view>
-    <div v-if="whitelist.includes(route.name as string)">
+    <div v-if="whitelist.includes(route?.name as string)">
         <Footer></Footer>
     </div>
 </template>

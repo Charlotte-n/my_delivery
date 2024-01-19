@@ -2,15 +2,16 @@
 import { ArrowRightBold, ArrowLeftBold } from '@element-plus/icons-vue'
 import Header from '@/components/common-header-2/index.vue'
 import { getOrderDetail } from '@/apis/order.ts'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useUserStore } from '@/store/user.ts'
 import { useRoute, useRouter } from 'vue-router'
 import { OrderDetailType } from '@/apis/types/order.ts'
 import { formate_img } from '@/utils/formate_img.ts'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const route = useRoute()
-const userStore = useUserStore()
+const userStore: any = useUserStore()
 const OrderDetailInfo = ref({} as OrderDetailType)
-const order_id = route.params.order_id
+const order_id = route.params.order_id as string
 const router = useRouter()
 const getOrderDetailApi = async () => {
     OrderDetailInfo.value = await getOrderDetail(
@@ -26,115 +27,133 @@ const gotoShopDetail = () => {
         path: `/deliveryShopDetail/${OrderDetailInfo.value._doc.restaurant_id}`,
     })
 }
-onMounted(() => {
-    getOrderDetailApi()
+const loading = ref(false)
+const watchReturn = () => {
+    console.log('监听到了')
+}
+onMounted(async () => {
+    loading.value = true
+    await getOrderDetailApi()
+    loading.value = false
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
 })
 </script>
 
 <template>
-    <header>
-        <Header>
-            <template #first>
-                <el-icon size="20" @click="back"
-                    ><ArrowLeftBold></ArrowLeftBold
-                ></el-icon>
-            </template>
-            <template #second>
-                <span>订单详情</span>
-            </template>
-        </Header>
-    </header>
-    <div class="order_detail">
-        <div class="pay_status">
-            <img
-                :src="formate_img(OrderDetailInfo._doc?.restaurant_image_url)"
-                alt=""
-            />
-            <span>{{ OrderDetailInfo._doc?.status_bar.title }}</span>
-            <button @click="gotoShopDetail">再来一单</button>
+    <div class="order_container">
+        <header>
+            <Header>
+                <template #first>
+                    <el-icon size="25" @click="back"
+                        ><ArrowLeftBold></ArrowLeftBold
+                    ></el-icon>
+                </template>
+                <template #second>
+                    <span>订单详情</span>
+                </template>
+            </Header>
+        </header>
+        <div class="order_detail">
+            <div style="height: 80vh" v-loading="loading" v-if="loading"></div>
+            <div class="pay_status">
+                <img
+                    :src="
+                        formate_img(OrderDetailInfo._doc?.restaurant_image_url)
+                    "
+                    alt=""
+                />
+                <span>{{ OrderDetailInfo._doc?.status_bar.title }}</span>
+                <button @click="gotoShopDetail">再来一单</button>
+            </div>
+            <div class="order_info_1">
+                <ul>
+                    <li @click="gotoShopDetail">
+                        <span class="img">
+                            <img
+                                :src="
+                                    formate_img(
+                                        OrderDetailInfo._doc
+                                            ?.restaurant_image_url,
+                                    )
+                                "
+                                alt=""
+                            />
+                        </span>
+                        <span class="order_name">{{
+                            OrderDetailInfo._doc?.restaurant_name
+                        }}</span>
+                        <span class="icon">
+                            <el-icon size="20"
+                                ><ArrowRightBold></ArrowRightBold
+                            ></el-icon>
+                        </span>
+                    </li>
+                    <li>
+                        <span>{{
+                            OrderDetailInfo._doc?.basket.group[0][0].name
+                        }}</span>
+                        <span>X{{ OrderDetailInfo._doc?.total_quantity }}</span>
+                        <span
+                            >￥{{
+                                OrderDetailInfo._doc?.basket.group[0][0].price
+                            }}</span
+                        >
+                    </li>
+                    <li>
+                        <span>配送费</span>
+                        <span>{{
+                            OrderDetailInfo._doc?.basket.packing_fee.price
+                        }}</span>
+                    </li>
+                    <li>
+                        <span
+                            >实付{{ OrderDetailInfo._doc?.total_amount }}</span
+                        >
+                    </li>
+                </ul>
+            </div>
+            <div class="delivery_info">
+                <p class="delivery_name">配送信息</p>
+                <ul>
+                    <li>
+                        <span>送达时间:</span>
+                        <span>{{ OrderDetailInfo.deliver_time }}</span>
+                    </li>
+                    <li>
+                        <span>送货地址:</span>
+                        <span class="address">{{
+                            OrderDetailInfo.addressDetail
+                        }}</span>
+                    </li>
+                    <li>
+                        <span>配送方式:</span>
+                        <span>蜂鸟专送</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="order_info_2" style="margin-bottom: 2vw">
+                <p class="delivery_name">订单信息</p>
+                <ul>
+                    <li>
+                        <span>订单号:</span>
+                        <span>{{ OrderDetailInfo.phone }}</span>
+                    </li>
+                    <li>
+                        <span>支付方式:</span>
+                        <span>{{ OrderDetailInfo.pay_method }}</span>
+                    </li>
+                    <li>
+                        <span>下单时间:</span>
+                        <span>2023-12-14 16:32</span>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="order_info_1">
-            <ul>
-                <li @click="gotoShopDetail">
-                    <span class="img">
-                        <img
-                            :src="
-                                formate_img(
-                                    OrderDetailInfo._doc?.restaurant_image_url,
-                                )
-                            "
-                            alt=""
-                        />
-                    </span>
-                    <span class="order_name">{{
-                        OrderDetailInfo._doc?.restaurant_name
-                    }}</span>
-                    <span class="icon">
-                        <el-icon size="20"
-                            ><ArrowRightBold></ArrowRightBold
-                        ></el-icon>
-                    </span>
-                </li>
-                <li>
-                    <span>{{
-                        OrderDetailInfo._doc?.basket.group[0][0].name
-                    }}</span>
-                    <span>X{{ OrderDetailInfo._doc?.total_quantity }}</span>
-                    <span
-                        >￥{{
-                            OrderDetailInfo._doc?.basket.group[0][0].price
-                        }}</span
-                    >
-                </li>
-                <li>
-                    <span>配送费</span>
-                    <span>{{
-                        OrderDetailInfo._doc?.basket.packing_fee.price
-                    }}</span>
-                </li>
-                <li>
-                    <span>实付{{ OrderDetailInfo._doc?.total_amount }}</span>
-                </li>
-            </ul>
-        </div>
-        <div class="delivery_info">
-            <p class="delivery_name">配送信息</p>
-            <ul>
-                <li>
-                    <span>送达时间:</span>
-                    <span>{{ OrderDetailInfo.deliver_time }}</span>
-                </li>
-                <li>
-                    <span>送货地址:</span>
-                    <span class="address">{{
-                        OrderDetailInfo.addressDetail
-                    }}</span>
-                </li>
-                <li>
-                    <span>配送方式:</span>
-                    <span>蜂鸟专送</span>
-                </li>
-            </ul>
-        </div>
-        <div class="order_info_2" style="margin-bottom: 2vw">
-            <p class="delivery_name">订单信息</p>
-            <ul>
-                <li>
-                    <span>订单号:</span>
-                    <span>{{ OrderDetailInfo.phone }}</span>
-                </li>
-                <li>
-                    <span>支付方式:</span>
-                    <span>{{ OrderDetailInfo.pay_method }}</span>
-                </li>
-                <li>
-                    <span>下单时间:</span>
-                    <span>2023-12-14 16:32</span>
-                </li>
-            </ul>
-        </div>
+        <div style="height: 8vw"></div>
     </div>
-    <div style="height: 8vw"></div>
 </template>
 
 <style scoped lang="scss">
@@ -142,6 +161,7 @@ header {
     position: sticky;
     top: 0;
     left: 0;
+    z-index: 99;
 }
 .order_detail {
     //支付状态

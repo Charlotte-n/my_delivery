@@ -10,17 +10,18 @@ import {
     getShopDetailInfo,
 } from '@/apis/delivery-home.ts'
 import { useRoute } from 'vue-router'
-import { onMounted, provide, ref } from 'vue'
+import { onMounted, onUnmounted, provide, ref } from 'vue'
 import {
     FoodMenu,
     RateInfoType,
     ShopDetailInfo,
 } from '@/apis/types/dekivery-home.ts'
 import listenBottom from '@/utils/listenBottomOut.ts'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 
 const route = useRoute()
 //#region获取商铺详情信息
-const shopInfo = ref<ShopDetailInfo>()
+const shopInfo = ref<ShopDetailInfo>({} as ShopDetailInfo)
 const getShopDetailInfoApi = async () => {
     shopInfo.value = await getShopDetailInfo(route.params.shop_id as string)
 }
@@ -71,20 +72,30 @@ const getAssessInfoApi = async () => {
         isShow.value = true
         return true
     }
-    assessInfoParam.value.offset += 20
+    assessInfoParam.value.offset! += 20
     AssessInfo.value = [...AssessInfo.value, ...res]
 }
+const loading = ref(false)
+const watchReturn = () => {
+    console.log('监听到了')
+}
 //endregion
-onMounted(() => {
-    getShopDetailInfoApi()
-    getFoodMenuApi()
-    getAssessInfoApi()
+onMounted(async () => {
+    loading.value = true
+    await getShopDetailInfoApi()
+    await getFoodMenuApi()
+    await getAssessInfoApi()
+    loading.value = false
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
 })
 </script>
 
 <template>
     <div class="shop-detail">
-        <header>
+        <header class="header-1">
             <Header :shopInfo="shopInfo"></Header>
         </header>
         <div class="menu">
@@ -98,7 +109,15 @@ onMounted(() => {
                 <el-menu-item index="2" class="ping">评价</el-menu-item>
             </el-menu>
         </div>
+        <div style="height: 90vh" v-loading="loading" v-if="loading"></div>
         <main v-show="activeIndex == 1">
+            <div
+                style="height: 70vh"
+                v-if="activeIndex == 1 && Object.keys(foodMenu).length === 0"
+                v-loading="
+                    activeIndex == 1 && Object.keys(foodMenu).length === 0
+                "
+            ></div>
             <Food :foodMenu="foodMenu"></Food>
         </main>
         <main
@@ -107,6 +126,13 @@ onMounted(() => {
             @scroll="Bottom"
             ref="main_assess"
         >
+            <div
+                style="height: 70vh"
+                v-if="activeIndex == 2 && Object.keys(AssessInfo).length === 0"
+                v-loading="
+                    activeIndex == 2 && Object.keys(AssessInfo).length === 0
+                "
+            ></div>
             <Assessment
                 ref="assessment"
                 :handleAssess="handleAssess"
@@ -114,7 +140,7 @@ onMounted(() => {
         </main>
         <footer v-show="activeIndex == 1">
             <Cart
-                :restaruant_id="route.params.shop_id"
+                :restaruant_id="route.params.shop_id as string"
                 :shopInfo="shopInfo"
             ></Cart>
         </footer>
@@ -122,16 +148,14 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.shop_detail {
-    height: 100%;
-    overflow: hidden;
-}
-.header {
+.header-1 {
     position: sticky;
+    top: 0;
+    z-index: 99;
 }
 header {
     display: block;
-    height: 25vw;
+    height: 35vw;
 }
 .menu {
     height: 11vw;

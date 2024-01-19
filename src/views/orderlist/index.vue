@@ -19,7 +19,7 @@ const params = ref({
 })
 
 const getOrderListApi = async () => {
-    const res = await getOrderList(params)
+    const res = await getOrderList(params.value)
     if (res.length === 0) {
         isShow.value = true
         return
@@ -32,11 +32,16 @@ const getOrderListApi = async () => {
 const listenBottom = ListenBottomOut(isShow, getOrderListApi)
 //endregion
 //回到前面
+//#region加载组件
+const loading = ref(false)
+//endregion
 const gotoHome = () => {
     router.push({ path: `/takeaway/${store.geohash}` })
 }
-onMounted(() => {
-    getOrderListApi()
+onMounted(async () => {
+    loading.value = true
+    await getOrderListApi()
+    loading.value = false
     window.addEventListener('scroll', listenBottom)
 })
 onUnmounted(() => {
@@ -45,32 +50,37 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="header-v1">
-        <Header>
-            <template #first>
-                <el-icon size="20" @click="gotoHome"
-                    ><ArrowLeftBold></ArrowLeftBold
-                ></el-icon>
-            </template>
-            <template #second> 订单列表 </template>
-        </Header>
-    </div>
-
-    <div class="orderlists">
-        <div class="orderlist-item" v-for="item in OrderList" :key="item.id">
-            <orderlist-item :orderInfo="item"></orderlist-item>
+    <div class="orderlist_container">
+        <header>
+            <Header>
+                <template #first>
+                    <el-icon size="25" @click="gotoHome"
+                        ><ArrowLeftBold></ArrowLeftBold
+                    ></el-icon>
+                </template>
+                <template #second> 订单列表 </template>
+            </Header>
+        </header>
+        <div class="orderlists">
+            <div v-loading="loading" style="height: 100vh" v-if="loading"></div>
+            <div
+                class="orderlist-item"
+                v-for="item in OrderList"
+                :key="item.id"
+            >
+                <orderlist-item :orderInfo="item"></orderlist-item>
+            </div>
         </div>
+        <div style="height: 10vw"></div>
     </div>
-    <div style="height: 10vw"></div>
 </template>
 
 <style scoped lang="scss">
 header {
-    position: fixed;
-    width: 100%;
-}
-.header-v1 {
-    height: 12vw;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 99;
 }
 .orderlist-item {
     margin-top: 6vw;

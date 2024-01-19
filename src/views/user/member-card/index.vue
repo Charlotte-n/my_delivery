@@ -3,17 +3,28 @@ import Header from '@/components/common-header-2/index.vue'
 import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/user.ts'
 import { useRouter } from 'vue-router'
+import { onMounted, onUnmounted } from 'vue'
+import { backPhone, cancelBack } from '@/utils/pullDown.ts'
 const router = useRouter()
-const userStore = useUserStore()
+const userStore: any = useUserStore()
 const userInfo = userStore.userInfo.detail_userinfo
 
 const back = () => {
     history.go(-1)
 }
+const watchReturn = () => {
+    console.log('监听到了')
+}
+onMounted(() => {
+    backPhone(watchReturn)
+})
+onUnmounted(() => {
+    cancelBack(watchReturn)
+})
 </script>
 
 <template>
-    <header>
+    <header class="header-v1">
         <Header>
             <template #first>
                 <el-icon size="25" @click="back"
@@ -161,6 +172,11 @@ const back = () => {
 </template>
 
 <style scoped lang="scss">
+.header-v1 {
+    position: sticky;
+    left: 0;
+    top: 0;
+}
 main {
     //账户
     h3 {

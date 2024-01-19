@@ -27,7 +27,7 @@ const gotoBack = () => {
                     <span class="name"> {{ props.shopInfo?.name }} </span>
                     <span class="delivery_detail">
                         商家配送/分钟送达/{{
-                            props.shopInfo?.piecewise_agent_fee.tips
+                            props.shopInfo?.piecewise_agent_fee?.tips
                         }}
                     </span>
                     <span class="inform">
@@ -37,9 +37,7 @@ const gotoBack = () => {
             </div>
         </div>
         <div class="activity">
-            <div class="act-left">
-                {{ props.shopInfo?.activities[0]?.name }}
-            </div>
+            <div class="act-left">满减优惠</div>
             <div class="act-right">
                 <span>{{ props.shopInfo?.activities?.length }}个活动</span>
                 <span>&gt;</span>
@@ -50,7 +48,10 @@ const gotoBack = () => {
 
 <style scoped lang="scss">
 .header {
-    padding: 2vw 1vw;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    padding: 10vw 1vw 2vw 1vw;
     display: flex;
     flex-direction: column;
     .top {

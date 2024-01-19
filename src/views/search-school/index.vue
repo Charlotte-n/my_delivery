@@ -25,11 +25,11 @@ const getSelectedCityApi = async () => {
     currentCity.value = res
 }
 // 搜索地址
-const searchAddressInfo = ref<SingleCity>([] as SingleCity)
+const searchAddressInfo = ref<SingleCity[]>([] as SingleCity[])
 const inputValue = ref('')
 const getAddressApi = async () => {
-    const res: SingleCity = await searchAddress(
-        route.params.id,
+    const res = await searchAddress(
+        Number(route.params.id as string),
         inputValue.value,
     )
     searchAddressInfo.value = res
@@ -53,21 +53,23 @@ onMounted(() => {
 </script>
 
 <template>
-    <Header :cityName="currentCity?.name">
-        <template v-slot:left>
-            <el-icon color="white" size="5vw"
-                ><ArrowLeftBold @click="goBack"
-            /></el-icon>
-        </template>
-        <template v-slot:right>
-            <router-link
-                class="change_city"
-                to="/"
-                :style="{ color: 'whitesmoke' }"
-                >切换城市</router-link
-            >
-        </template>
-    </Header>
+    <header class="header-1">
+        <Header :cityName="currentCity?.name as string">
+            <template v-slot:left>
+                <el-icon color="white" size="5vw"
+                    ><ArrowLeftBold @click="goBack"
+                /></el-icon>
+            </template>
+            <template v-slot:right>
+                <router-link
+                    class="change_city"
+                    to="/"
+                    :style="{ color: 'whitesmoke' }"
+                    >切换城市</router-link
+                >
+            </template>
+        </Header>
+    </header>
     <Search
         searchTitle="输入学校、商务楼、地址"
         @getInputValue="getInputValue"
@@ -93,6 +95,7 @@ onMounted(() => {
                     @click="gotoDetail"
                 >
                     <h4>齐鲁工业大学</h4>
+                    <p>{{ item }}</p>
                     <p>山东省济南市长清区大学路3501号</p>
                 </li>
             </ul>
@@ -101,6 +104,13 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+.header-1 {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+}
 .search_history {
     margin-top: 1vh;
     font-size: 2vw;

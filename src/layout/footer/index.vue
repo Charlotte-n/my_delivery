@@ -5,10 +5,13 @@ import { Tickets } from '@element-plus/icons-vue'
 import { User } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, watch } from 'vue'
+import { useUserStore } from '@/store/user.ts'
 
+const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
 const footer_name = ref(route.name)
+const userInfo: any = userStore.userInfo
 
 //监测路由的变化来进行改变颜色的变化
 watch(
@@ -25,6 +28,11 @@ const gotoOrderList = () => {
     router.push({ path: '/orderlist' })
 }
 const gotoUser = () => {
+    //判断是否登录了
+    if (!userInfo.user_id) {
+        router.push('/login')
+        return
+    }
     router.push({ path: '/user' })
 }
 </script>
@@ -33,7 +41,7 @@ const gotoUser = () => {
     <footer>
         <div @click="gotoHome">
             <el-icon
-                size="5.6vw"
+                size="25"
                 :class="{ active_name: footer_name === 'takeaway' }"
                 ><Eleme
             /></el-icon>
@@ -41,7 +49,7 @@ const gotoUser = () => {
         </div>
         <div @click="gotoSearch">
             <el-icon
-                size="5vw"
+                size="25"
                 :class="{ active_name: footer_name === 'search' }"
                 ><Compass
             /></el-icon>
@@ -49,14 +57,14 @@ const gotoUser = () => {
         </div>
         <div @click="gotoOrderList">
             <el-icon
-                size="5vw"
+                size="25"
                 :class="{ active_name: footer_name === 'orderlist' }"
                 ><Tickets
             /></el-icon>
             <span>订单</span>
         </div>
         <div @click="gotoUser">
-            <el-icon size="5vw" :class="{ active_name: footer_name === 'user' }"
+            <el-icon size="25" :class="{ active_name: footer_name === 'user' }"
                 ><User
             /></el-icon>
             <span>我的</span>
@@ -73,13 +81,14 @@ footer {
     left: 0;
     width: 100%;
     background-color: white;
+    font-size: 4vw;
     div {
         padding: 1vw 0;
         display: flex;
         flex-direction: column;
         align-items: center;
         span {
-            font-size: 1vw;
+            font-size: 4vw;
             text-align: center;
         }
     }

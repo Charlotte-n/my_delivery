@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getCity } from '@/apis/city.ts'
-import { letterCity, SingleCity } from '@/apis/types/city.ts'
+import { letterCity } from '@/apis/types/city.ts'
 
 const letterCity = ref<letterCity>({} as letterCity)
 const getCityApi = async () => {
     const res = await getCity('group')
-    const result = sortData(res)
+    const result: any = sortData(res)
     letterCity.value = result
 }
 //将获取的数据进行排序
-const sortData = (sortObj) => {
-    let sortobj = {}
+const sortData = (sortObj: any) => {
+    let sortobj = {} as any
     for (let i = 65; i <= 90; i++) {
         if (sortObj[String.fromCharCode(i)]) {
             sortobj[String.fromCharCode(i)] = sortObj[String.fromCharCode(i)]
@@ -19,17 +19,17 @@ const sortData = (sortObj) => {
     }
     return sortobj
 }
-onMounted(() => {
-    getCityApi()
+const loading = ref(false)
+onMounted(async () => {
+    loading.value = true
+    await getCityApi()
+    loading.value = false
 })
 </script>
 
 <template>
-    <div
-        class="letter_city"
-        v-for="(value, key, index) in letterCity"
-        :key="key"
-    >
+    <div style="height: 80vh" v-loading="loading" v-if="loading"></div>
+    <div class="letter_city" v-for="(value, key) in letterCity" :key="key">
         <div class="letter">{{ key }}</div>
         <div class="cities">
             <router-link

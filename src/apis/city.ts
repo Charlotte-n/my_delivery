@@ -42,7 +42,7 @@ export const getSelectedCityInfo = (id: string | RouteParamValue[]) => {
  */
 export const searchAddress = (city_id: number, keyword: string) => {
     return services
-        .get<ResponseType<SingleCity>>({
+        .get<ResponseType<SingleCity[]>>({
             url: BaseRequestUrl.SEARCH_ADDRESS,
             params: {
                 city_id,

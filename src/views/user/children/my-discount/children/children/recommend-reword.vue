@@ -7,14 +7,16 @@ const back = () => {
 </script>
 
 <template>
-    <Header>
-        <template #first>
-            <el-icon size="25" @click="back"
-                ><ArrowLeftBold></ArrowLeftBold
-            ></el-icon>
-        </template>
-        <template #second>推荐有奖</template>
-    </Header>
+    <header>
+        <Header>
+            <template #first>
+                <el-icon size="25" @click="back"
+                    ><ArrowLeftBold></ArrowLeftBold
+                ></el-icon>
+            </template>
+            <template #second>推荐有奖</template>
+        </Header>
+    </header>
     <el-empty description="无法使用代金券" />
     <div class="download_update">
         <button>下载或升级客户端</button>

@@ -4,7 +4,8 @@ import { ShopDetailInfo } from '@/apis/types/dekivery-home.ts'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { DeleteFilled } from '@element-plus/icons-vue'
-
+import { useUserStore } from '@/store/user.ts'
+const userStore: any = useUserStore()
 const router = useRouter()
 const props = defineProps<{
     restaruant_id: string | number
@@ -64,6 +65,16 @@ const showCartContent = () => {
     showCartList.value = !showCartList.value
 }
 //endregion
+//去支付
+const payMoney = () => {
+    //判断是否登录
+    if (!userStore.userInfo.user_id) {
+        //去登录页面
+        router.push('/login')
+        return
+    }
+    router.push('/order/pay/' + props.restaruant_id + '/' + 123)
+}
 onMounted(() => {})
 </script>
 
@@ -157,12 +168,7 @@ onMounted(() => {})
         <span v-if="unArrivePrice > 0 || isNaN(unArrivePrice)" class="gotoPay"
             >还差{{ props.shopInfo?.float_minimum_order_amount }}元才配送</span
         >
-        <span
-            v-else
-            class="gotoPay_01"
-            @click="router.push('/order/pay/' + restaruant_id + '/' + 123)"
-            >去支付</span
-        >
+        <span v-else class="gotoPay_01" @click="payMoney">去支付</span>
     </div>
 </template>
 

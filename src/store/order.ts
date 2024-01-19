@@ -1,14 +1,22 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-export const useOrderStore = defineStore('orderStore', {
-    state: () => ({
-        orderRemark: null,
-    }),
-    actions: {
-        setOrderRemark(remark) {
-            this.orderRemark = remark
-        },
+export const useOrderStore: any = defineStore(
+    'orderStore',
+    () => {
+        const orderRemark = ref({})
+
+        const setOrderRemark = (remark: any) => {
+            orderRemark.value = remark
+        }
+        return {
+            orderRemark,
+            setOrderRemark,
+        }
     },
-})
+    {
+        persist: true,
+    },
+)
 
 export default useOrderStore
