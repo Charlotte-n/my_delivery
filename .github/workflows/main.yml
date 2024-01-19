@@ -23,7 +23,7 @@ jobs:
         - name: 打包
           run: npm build
         - name: 上传服务器
-          uses: appleboy/scp-action@v0.0.1
+          uses: appleboy/scp-action@v0.1.7
           with:
               host: ${{ secrets.HOST }}
               username: ${{ secrets.USERNAME }}
